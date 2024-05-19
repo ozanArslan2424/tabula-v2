@@ -16,8 +16,8 @@ import Link from "next/link";
 export default function UserButton({ user }: { user: UserType }) {
   if (!user) {
     return (
-      <Link href="/login" className="btn">
-        Giriş Yap
+      <Link href="/login" className="px-3">
+        Login
       </Link>
     );
   }
