@@ -32,7 +32,7 @@ export default function MobileHeader({ user, children }: Props) {
               <HamburgerMenuIcon />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-[80vw] p-0">
+          <SheetContent side="left" className="w-[80vw] overflow-y-scroll p-0">
             <div className="overflow-y-scroll">
               <div className="w-full border-b border-primary/10 bg-secondary/50 p-4">
                 <Link href="/dash" className="text-xl font-bold">

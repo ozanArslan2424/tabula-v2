@@ -78,7 +78,7 @@ export default function BookItem({ book }: { book: BookInfoType }) {
             <p className="text-xs">{bookInfo.notes.length}</p>
           </div>
           {bookInfo.hasTasks && (
-            <div className="mt-2 flex w-max items-center justify-center gap-2 rounded-sm bg-accent px-2 py-1 text-accent-foreground">
+            <div className="mt-2 flex w-max items-center justify-center gap-2 rounded-sm bg-emerald-500 px-2 py-1 text-black">
               <CheckSquareIcon size={14} />
               <p className="text-xs">{bookInfo.tasks.length}</p>
             </div>
