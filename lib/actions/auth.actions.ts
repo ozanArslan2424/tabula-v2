@@ -4,7 +4,7 @@ import { getSession, lucia } from "@/lib/auth";
 import db from "@/lib/db";
 import { registerTokenTable, userTable } from "@/lib/db/schema";
 import { LoginSchema, RegisterSchema, SettingsSchema } from "@/lib/types/schemas";
-import * as argon2 from "argon2";
+import { hash, verify } from "@node-rs/argon2";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import * as z from "zod";
@@ -67,7 +67,7 @@ export const registerAction = async (values: z.infer<typeof RegisterSchema>) => 
 
     if (!existingUser) return { error: "Invite not found." };
 
-    const hashedPassword = await argon2.hash(validatedFields.data.password);
+    const hashedPassword = await hash(validatedFields.data.password);
 
     await db
       .update(userTable)
@@ -105,7 +105,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     return { error: "User not found." };
   }
 
-  const isValidPassword = await argon2.verify(existingUser.password, validatedFields.data.password);
+  const isValidPassword = await verify(existingUser.password, validatedFields.data.password);
 
   if (!isValidPassword) {
     return { error: "Mistake in email or password" };
@@ -160,14 +160,14 @@ export const updateSettings = async (values: z.infer<typeof SettingsSchema>) => 
       return { error: "User not found." };
     }
 
-    const passwordConfirmed = await argon2.verify(existingUser.password!, validatedFields.data.password);
+    const passwordConfirmed = await verify(existingUser.password!, validatedFields.data.password);
 
     if (!passwordConfirmed) {
       return { error: "Mistake in email or password" };
     }
 
     if (validatedFields.data.newPassword && passwordConfirmed) {
-      const hashedPassword = await argon2.hash(validatedFields.data.newPassword);
+      const hashedPassword = await hash(validatedFields.data.newPassword);
 
       await db
         .update(userTable)
