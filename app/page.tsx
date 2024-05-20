@@ -11,23 +11,29 @@ export default function LandingPage() {
             <div className="mx-auto grid max-w-[1300px] gap-4 px-4 sm:px-6 md:grid-cols-2 md:gap-16 md:px-10">
               <div>
                 <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
-                  Take notes <i>naturally,</i> sync across devices
+                  Take notes <i>naturally,</i>
+                  <br /> sync across devices
                 </h1>
               </div>
-              <div className="flex flex-col items-start space-y-4">
-                <p className="mx-auto max-w-[700px] text-foreground  md:text-xl">
+              <div className="flex flex-col items-start space-y-6">
+                <h2>
+                  <span className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">
+                    A note-taking app for everyone
+                  </span>
+                </h2>
+                <p className="mx-auto max-w-[700px] text-foreground md:text-lg">
                   Tabula Notes is a note-taking app designed to help you stay organized and productive across all your
                   devices.
+                  <br /> Take a look at{" "}
+                  <Link className="underline underline-offset-[5px]" href="ozanarslan.vercel.app">
+                    my portfolio
+                  </Link>{" "}
+                  for my other projects
                 </p>
-                <div className="flex items-center gap-4">
-                  <Button variant="outline">
-                    <Link href="ozanarslan.vercel.app">My Portfolio</Link>
-                  </Button>
 
-                  <Button>
-                    <Link href="/dash">Get Started</Link>
-                  </Button>
-                </div>
+                <Button>
+                  <Link href="/dash">Get Started</Link>
+                </Button>
               </div>
             </div>
           </div>
