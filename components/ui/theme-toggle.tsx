@@ -12,14 +12,29 @@ export default function ThemeToggle() {
 
   if (!mounted)
     return (
-      <Button variant="outline" size="circle" disabled>
+      <Button variant="outline" size="icon_xs" className="bg-background" disabled>
         <LoadingIcon />
       </Button>
     );
 
   return (
-    <Button variant="outline" size="circle" onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}>
-      {resolvedTheme === "light" ? <MoonIcon size={14} /> : <SunIcon size={14} />}
+    <Button
+      variant="outline"
+      size="icon_xs"
+      className="bg-background"
+      onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
+    >
+      {resolvedTheme === "light" ? (
+        <div className="flex items-center gap-2">
+          <MoonIcon size={14} />
+          <span className="sr-only">Dark Mode</span>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2">
+          <SunIcon size={14} />
+          <span className="sr-only">Light Mode</span>
+        </div>
+      )}
     </Button>
   );
 }

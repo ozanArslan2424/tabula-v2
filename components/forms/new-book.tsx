@@ -9,7 +9,6 @@ import { createBook } from "@/lib/actions/create";
 import { BookSchema } from "@/lib/types/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 type Props = {
@@ -21,6 +20,7 @@ export default function NewBookForm({ userId, closeDialog }: Props) {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<z.infer<typeof BookSchema>>({
     resolver: zodResolver(BookSchema),
@@ -33,7 +33,7 @@ export default function NewBookForm({ userId, closeDialog }: Props) {
   function onSubmit(values: z.infer<typeof BookSchema>) {
     createBook(values).then((data) => {
       if (data.error) {
-        toast.error(data.error);
+        setError("root", { message: data.error });
       } else {
         closeDialog();
       }
@@ -41,7 +41,7 @@ export default function NewBookForm({ userId, closeDialog }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4 px-4 py-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4 p-4">
       {errors.root && <Message variant="error">{errors.root.message}</Message>}
 
       <Label>
@@ -55,17 +55,17 @@ export default function NewBookForm({ userId, closeDialog }: Props) {
         <Textarea {...register("description")} placeholder="Kısa bir açıklama" className="resize-none" />
       </Label>
 
-      <Checkbox {...register("hasTasks")}>
-        <span>Task list</span>
-      </Checkbox>
+      <div className="flex items-center gap-2">
+        <Checkbox {...register("hasTasks")}>
+          <span>Task list</span>
+        </Checkbox>
 
-      <div className="flex items-center justify-end gap-2 px-4">
-        <Button type="reset" size="sm" variant="secondary" onClick={closeDialog}>
+        <Button size="sm" variant="secondary" onClick={closeDialog}>
           Cancel
         </Button>
 
         <Button type="submit" size="sm">
-          Create
+          Save
         </Button>
       </div>
     </form>

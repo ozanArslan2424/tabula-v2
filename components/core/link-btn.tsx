@@ -17,7 +17,7 @@ export const LibraryLink = () => {
 
 export const AdminLink = () => {
   return (
-    <Link href="/dash/admin" className={cn(linkClasses, "bg-accent text-accent-foreground shadow-sm")}>
+    <Link href="/admin" className={cn(linkClasses, "bg-accent text-accent-foreground shadow-sm")}>
       To admin panel &#x2192;
     </Link>
   );

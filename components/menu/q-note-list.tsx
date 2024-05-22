@@ -10,8 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircleIcon, Trash2Icon } from "lucide-react";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
+import Message from "../ui/message";
 
 type Props = {
   userId: string;
@@ -31,7 +31,8 @@ export const QuicknoteList = ({ userId, quicknotes }: Props) => {
     register,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    setError,
+    formState: { isSubmitting, errors },
   } = useForm<z.infer<typeof QuicknoteSchema>>({
     resolver: zodResolver(QuicknoteSchema),
     defaultValues: {
@@ -44,12 +45,13 @@ export const QuicknoteList = ({ userId, quicknotes }: Props) => {
       if (data.success) {
         reset();
       }
-      if (data.error) toast.error(data.error);
+      if (data.error) setError("root", { message: data.error });
     });
   };
   return (
-    <div className="space-y-1 p-4">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex w-full items-center gap-2 pb-2">
+    <div className="flex flex-col gap-1 p-4">
+      <h2 className="text-lg font-bold">Quicknotes</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex w-full items-center gap-2 py-2">
         <Input
           {...register("content")}
           placeholder="Type something..."
@@ -68,6 +70,7 @@ export const QuicknoteList = ({ userId, quicknotes }: Props) => {
           <PlusCircleIcon size={14} className="shrink-0" />
         </Button>
       </form>
+      {errors.root && <Message variant="formerror">{errors.root.message}</Message>}
       {quicknotes.map((qNote) => (
         <div
           key={qNote.id}

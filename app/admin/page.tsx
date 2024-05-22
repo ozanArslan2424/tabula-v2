@@ -1,4 +1,4 @@
-import { LibraryLink } from "@/components/buttons/link-btn";
+import { LibraryLink } from "@/components/core/link-btn";
 import { ChangeUserRole, DeleteUser, InviteForm, ReInviteForm } from "@/components/forms/admin";
 import TestPage from "@/components/layout/test-page";
 import Button from "@/components/ui/button";

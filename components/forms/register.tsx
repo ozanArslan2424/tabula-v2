@@ -8,13 +8,10 @@ import Message from "@/components/ui/message";
 import { registerAction } from "@/lib/actions/auth.actions";
 import { RegisterSchema } from "@/lib/types/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export default function RegisterForm({ email }: { email: string }) {
-  const router = useRouter();
-
   const {
     register,
     handleSubmit,
@@ -30,7 +27,6 @@ export default function RegisterForm({ email }: { email: string }) {
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     registerAction(values).then((data) => {
       if (data.error) setError("root", { message: data.error });
-      if (data.success) router.push("/dash");
     });
   };
 

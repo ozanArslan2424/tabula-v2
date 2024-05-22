@@ -14,7 +14,7 @@ const config: Config = {
     fontFamily: {
       script: ["Courier", "Courier New", "monospace"],
       quote: ["Cambria", "Cochin", "Georgia", "Times", "Times New Roman", "serif"],
-      note: ["Montserrat", "sans-serif"],
+      montserrat: ["Montserrat", "sans-serif"],
       inter: ["Inter", "sans-serif"],
       mono: ["SFMono-Regular", "Fira Code", "monospace", "Menlo", "Liberation Mono", "Consolas", "ui-monospace"],
     },
@@ -26,8 +26,38 @@ const config: Config = {
       },
     },
     extend: {
+      height: {
+        half: "50%",
+        title: "60px",
+        main: "calc(100dvh - 60px)",
+      },
+      maxHeight: {
+        half: "50%",
+        main: "calc(100dvh - 60px)",
+      },
+      minHeight: {
+        half: "50%",
+        main: "calc(100dvh - 60px)",
+      },
+      width: {
+        half: "50%",
+        menu: "20rem",
+        main: "calc(100vw - 20rem)",
+        note: "80ch",
+      },
       maxWidth: {
         half: "50%",
+        menu: "20rem",
+        screen: "100vw",
+        main: "calc(100vw - 20rem)",
+        note: "80ch",
+      },
+      minWidth: {
+        half: "50%",
+        menu: "20rem",
+        screen: "100vw",
+        main: "calc(100vw - 20rem)",
+        note: "80ch",
       },
       colors: {
         border: "hsl(var(--border))",

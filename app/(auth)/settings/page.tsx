@@ -1,4 +1,4 @@
-import { AdminLink, LibraryLink } from "@/components/buttons/link-btn";
+import { AdminLink, LibraryLink } from "@/components/core/link-btn";
 import { SettingsForm } from "@/components/forms/settings";
 import Button from "@/components/ui/button";
 import { logout } from "@/lib/actions/auth.actions";

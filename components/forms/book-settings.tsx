@@ -11,7 +11,7 @@ import { BookInfoType, BookType } from "@/lib/types";
 import { BookSettingsSchema } from "@/lib/types/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+
 import { z } from "zod";
 
 type Props = {
@@ -42,7 +42,6 @@ export default function BookSettingsForm({ book, closeDialog }: Props) {
         setError("root", { message: data.error });
       }
       if (data?.success) {
-        toast.success(data?.success);
         closeDialog();
       }
     });
@@ -50,30 +49,30 @@ export default function BookSettingsForm({ book, closeDialog }: Props) {
   if (isSubmitting) return <LoadingIcon size={24} />;
 
   return (
-    <form className="w-full space-y-4 px-4" onSubmit={handleSubmit(onSubmit)}>
+    <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
       {errors.root && <Message variant="error">{errors.root.message}</Message>}
 
       <Label>
         <span>Book title</span>
-        <Input {...register("title")} type="text" placeholder="Title" disabled={isSubmitting} required />
+        <Input {...register("title")} type="text" placeholder="Title" required />
         {errors.title && <Message variant="formerror">{errors.title.message}</Message>}
       </Label>
 
       <Label>
         <span>Book description</span>
-        <Textarea {...register("description")} placeholder="Short description" disabled={isSubmitting} />
+        <Textarea {...register("description")} placeholder="Short description" />
       </Label>
 
-      <Checkbox {...register("hasTasks")}>
-        <span>Task list</span>
-      </Checkbox>
+      <div className="flex items-center gap-2">
+        <Checkbox {...register("hasTasks")}>
+          <span>Task list</span>
+        </Checkbox>
 
-      <div className="flex items-center justify-end gap-2 px-4">
-        <Button disabled={isSubmitting} type="reset" size="sm" variant="secondary" onClick={closeDialog}>
+        <Button size="sm" variant="secondary" onClick={closeDialog}>
           Cancel
         </Button>
 
-        <Button disabled={isSubmitting} type="submit" size="sm">
+        <Button type="submit" size="sm">
           Save
         </Button>
       </div>

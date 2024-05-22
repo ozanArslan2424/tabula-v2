@@ -1,5 +1,5 @@
 "use client";
-import { LandingPageLink } from "@/components/buttons/link-btn";
+import { LandingPageLink } from "@/components/core/link-btn";
 import RegisterForm from "@/components/forms/register";
 import Message from "@/components/ui/message";
 import { verifyInvite } from "@/lib/actions/auth.actions";
@@ -16,6 +16,7 @@ export default function Page() {
 
   const onVerify = useCallback(() => {
     if (success || error) return;
+
     if (!token) {
       setError("Verification token not found.");
       return;
@@ -35,25 +36,24 @@ export default function Page() {
     onVerify();
   }, [onVerify]);
 
-  if (!success) return <Message variant="accent">Validating...</Message>;
-
-  if (success && email) {
+  if (error && !success) {
     return (
-      <div className="min-w-80 space-y-4">
+      <>
+        <Message variant="error">{error}</Message>
+        <LandingPageLink />
+      </>
+    );
+  }
+
+  if (!success && !error) return <Message variant="accent">Validating...</Message>;
+
+  if (success && !error && email) {
+    return (
+      <>
         <Message variant="success">Email and token validated.</Message>
         <h1 className="mb-4 text-center text-3xl font-bold">Create your account</h1>
         <RegisterForm email={email} />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="min-w-80">
-        <Message className="mb-4" variant="error">
-          {error}
-        </Message>
-        <LandingPageLink />
-      </div>
+      </>
     );
   }
 }

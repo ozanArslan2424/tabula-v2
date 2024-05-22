@@ -24,7 +24,7 @@ export const deleteNote = async (noteId: string, bookId: string) => {
   } catch (error) {
     return { error: "There was an error. Please try again" };
   } finally {
-    revalidatePath(`/dash/${bookId}`, "page");
+    revalidatePath(`/${bookId}`, "page");
   }
 };
 
@@ -36,7 +36,7 @@ export const deleteTask = async (taskId: string, bookId: string) => {
   } catch (error) {
     return { error: "There was an error. Please try again" };
   } finally {
-    revalidatePath(`/dash/${bookId}`, "page");
+    revalidatePath(`/${bookId}`, "page");
   }
 };
 

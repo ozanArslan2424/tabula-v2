@@ -1,4 +1,4 @@
-import { LibraryLink } from "@/components/buttons/link-btn";
+import { LibraryLink } from "@/components/core/link-btn";
 
 export default function NotFoundPage() {
   return (

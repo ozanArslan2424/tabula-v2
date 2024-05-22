@@ -49,7 +49,7 @@ export const createNote = async (values: z.infer<typeof NoteSchema>) => {
   } catch (error) {
     return { error: "There was an error. Please try again" };
   } finally {
-    revalidatePath(`/dash/${values.bookId}`);
+    revalidatePath(`/${values.bookId}`);
   }
 };
 
@@ -92,6 +92,6 @@ export const createTask = async (values: z.infer<typeof TaskSchema>) => {
   } catch (error) {
     return { error: "There was an error. Please try again" };
   } finally {
-    revalidatePath(`/dash/${values.bookId}`);
+    revalidatePath(`/${values.bookId}`);
   }
 };

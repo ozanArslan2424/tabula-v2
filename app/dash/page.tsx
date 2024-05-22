@@ -1,8 +1,10 @@
-import CreateBookButton from "@/components/buttons/new-book-btn";
 import { BookList } from "@/components/core/book-list";
-import { DashMenu } from "@/components/layout/dash-menu";
+import MobileHeader from "@/components/layout/mobile-header";
+import UserButton from "@/components/layout/user-btn";
+import { QuicknoteList } from "@/components/menu/q-note-list";
+import ThemeToggle from "@/components/ui/theme-toggle";
+import { getAllBooks, getQuicknotes } from "@/lib/actions/read";
 import { getSession } from "@/lib/auth";
-import { cn } from "@/lib/utils";
 import { redirect } from "next/navigation";
 
 export default async function DashPage() {
@@ -10,25 +12,30 @@ export default async function DashPage() {
   if (!user) {
     redirect("/login");
   }
+  const books = await getAllBooks(user.id);
+  const quicknotes = await getQuicknotes(user.id);
 
   return (
-    <div
-      className={cn(
-        "grid",
-        "md:grid-cols-[20vw_80vw] md:grid-rows-[calc(100dvh-48px)]",
-        "grid-cols-1 grid-rows-[60px_calc(100dvh-60px)]",
-      )}
-    >
-      <DashMenu user={user} />
+    <div className="flex h-full flex-col md:flex-row">
+      <MobileHeader>
+        <div className="title-bar">
+          <h1 className="h1">Menu</h1>
+        </div>
 
-      <main className="overflow-x-hidden overflow-y-scroll md:col-start-2 md:col-end-3">
-        <div className="flex h-[60px] items-center justify-between gap-2 border-b border-primary/10 bg-background px-6 py-2">
-          <h1 className="text-2xl font-semibold tracking-tight">Library</h1>
-          <CreateBookButton userId={user.id} />
+        <div className="max-h-main h-main overflow-x-hidden overflow-y-scroll">
+          <div className="flex gap-2 border-b border-primary/10 px-4 py-2">
+            <ThemeToggle />
+            <UserButton user={user} />
+          </div>
+          <QuicknoteList userId={user.id} quicknotes={quicknotes} />
         </div>
-        <div className="p-4">
-          <BookList userId={user.id} />
+      </MobileHeader>
+
+      <main className="h-dvh max-h-dvh w-full">
+        <div className="title-bar">
+          <h1 className="h1">Library</h1>
         </div>
+        <BookList userId={user.id} books={books} />
       </main>
     </div>
   );

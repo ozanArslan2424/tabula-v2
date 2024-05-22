@@ -7,6 +7,7 @@ import { LoginSchema, RegisterSchema, SettingsSchema } from "@/lib/types/schemas
 import { hash, verify } from "@node-rs/argon2";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import * as z from "zod";
 
 export const verifyInvite = async (token: string) => {
@@ -85,7 +86,7 @@ export const registerAction = async (values: z.infer<typeof RegisterSchema>) => 
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
-    return { success: "Successfully registered." };
+    redirect("/dash");
   } catch {
     return { error: "There was an error. Please try again" };
   }

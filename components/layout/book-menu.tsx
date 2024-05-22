@@ -1,84 +1,71 @@
-import BookSettings from "@/components/buttons/book-settings-btn";
-import { TaskList } from "@/components/core/task-list";
-import MobileHeader from "@/components/layout/mobile-header";
-import { getBookList } from "@/lib/actions/read";
-import { BookType, UserType } from "@/lib/types";
-import { toSnakeCase } from "@/lib/utils";
-import { BookOpenTextIcon, BookTextIcon, ChevronRight } from "lucide-react";
-import Link from "next/link";
+"use client";
+import UserButton from "@/components/layout/user-btn";
+import { TaskList } from "@/components/menu/task-list";
+import ThemeToggle from "@/components/ui/theme-toggle";
+import { BookType } from "@/lib/types";
+import { User } from "lucia";
+import { HomeIcon, Settings2Icon } from "lucide-react";
+import { useMemo, useState } from "react";
+import BookSettingsForm from "../forms/book-settings";
+import { NotesList } from "../menu/notes-list";
+import { OtherBooksList } from "../menu/others-list";
+import Button from "../ui/button";
+import LinkButton from "../ui/link-btn";
 
 type Props = {
-  user: UserType;
+  user: User;
   currentBook: BookType;
+  bookList: { id: string; title: string }[];
 };
 
-export const BookMenu = async ({ user, currentBook }: Props) => {
-  if (!user) return null;
+export const BookMenu = ({ user, currentBook, bookList }: Props) => {
+  const [editing, setEditing] = useState(false);
 
-  const bookList = await getBookList(user.id);
+  const currentBookMemo = useMemo(
+    () => ({
+      ...currentBook,
+    }),
+    [currentBook],
+  );
+
+  const bookListMemo = useMemo(() => bookList, [bookList]);
+
+  if (editing) {
+    return (
+      <div className="max-h-main h-main w-menu space-y-1 overflow-x-hidden overflow-y-scroll p-4">
+        <h3 className="text-lg font-semibold">Book settings</h3>
+        <BookSettingsForm book={currentBookMemo} closeDialog={() => setEditing(false)} />
+      </div>
+    );
+  }
 
   return (
-    <MobileHeader user={user}>
-      {/* BOOK TITLE */}
-      <div className="flex h-[60px] items-center justify-between border-b border-primary/10 px-4 py-2">
-        <div className="flex items-center gap-4">
-          <BookOpenTextIcon size={24} className="shrink-0" />
-          <h2 className="text-2xl font-bold">{currentBook.title}</h2>
-        </div>
-        <BookSettings book={currentBook} />
-      </div>
+    <div className="max-h-main h-main w-menu overflow-x-hidden overflow-y-scroll">
+      {/* USER MENU */}
+      <div className="flex gap-2 border-b border-primary/10 px-4 py-2">
+        <ThemeToggle />
+        <LinkButton href="/dash" variant="outline" size="icon_xs" className="bg-background">
+          <HomeIcon size={12} className="shrink-0" />
+          <span className="sr-only">Library</span>
+        </LinkButton>
+        <UserButton user={user} />
 
-      {/* DESCRIPTION */}
-      {currentBook.description && (
-        <div className="p-4">
-          <p className="text-sm text-primary/60">{currentBook.description}</p>
-        </div>
-      )}
+        <Button size="xs" variant="outline" className="min-w-fit flex-1 bg-background" onClick={() => setEditing(true)}>
+          <Settings2Icon size={12} className="shrink-0" />
+          <span className="shrink-0">Book settings</span>
+        </Button>
+      </div>
 
       {/* TASKS */}
-      {currentBook.hasTasks && <TaskList userId={user.id} bookId={currentBook.id} tasks={currentBook.tasks} />}
-
-      {/* NOTES LIST */}
-      {currentBook.notes.length > 0 && (
-        <div className="flex flex-col gap-1 p-4">
-          <h3 className="text-lg font-semibold">Note titles</h3>
-          {currentBook.notes
-            .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-            .map((note) => (
-              <Link
-                href={`#${toSnakeCase(note.title)}`}
-                key={note.id}
-                className="group relative flex h-9 w-full items-center justify-start gap-4 truncate rounded-sm px-2 py-1 text-sm capitalize hover:bg-secondary"
-              >
-                <ChevronRight className="transition-transform group-hover:translate-x-2" size={14} />
-                {note.title}
-              </Link>
-            ))}
-        </div>
+      {currentBookMemo.hasTasks && (
+        <TaskList userId={user.id} bookId={currentBookMemo.id} tasks={currentBookMemo.tasks} />
       )}
 
+      {/* NOTES LIST */}
+      {currentBookMemo.notes.length > 0 && <NotesList notes={currentBookMemo.notes} />}
+
       {/* OTHER BOOKS */}
-      <div className="flex flex-col gap-1 p-4">
-        <h3 className="text-lg font-semibold">Other books</h3>
-        {bookList &&
-          bookList
-            .filter((book) => book.id !== currentBook.id)
-            .map((book) => {
-              return (
-                <Link
-                  href={`/dash/${book.id}`}
-                  key={book.id}
-                  className="group flex h-9 w-full items-center justify-start gap-4 truncate rounded-sm px-2 py-1 text-sm capitalize hover:bg-secondary"
-                >
-                  <BookTextIcon
-                    size={14}
-                    className="transition-transform group-hover:translate-x-1 group-hover:rotate-3 group-hover:scale-125"
-                  />
-                  {book.title}
-                </Link>
-              );
-            })}
-      </div>
-    </MobileHeader>
+      {bookListMemo && <OtherBooksList otherBooks={bookListMemo} currentBookId={currentBookMemo.id} />}
+    </div>
   );
 };

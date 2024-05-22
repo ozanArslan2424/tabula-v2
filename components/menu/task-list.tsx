@@ -12,8 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircleIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
+import Message from "../ui/message";
 
 type Props = {
   userId: string;
@@ -26,7 +26,8 @@ export const TaskList = ({ userId, bookId, tasks }: Props) => {
     register,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    setError,
+    formState: { isSubmitting, errors },
   } = useForm<z.infer<typeof TaskSchema>>({
     resolver: zodResolver(TaskSchema),
     defaultValues: {
@@ -40,14 +41,12 @@ export const TaskList = ({ userId, bookId, tasks }: Props) => {
       if (data.success) {
         reset();
       }
-      if (data.error) {
-        toast.error(data.error);
-      }
+      if (data.error) setError("root", { message: data.error });
     });
   };
 
   return (
-    <div className="flex flex-col gap-1 border-y border-primary/10 p-4">
+    <div className="flex flex-col gap-1 p-4">
       <h2 className="text-lg font-bold">Tasks</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex w-full items-center gap-2 py-2">
@@ -64,6 +63,8 @@ export const TaskList = ({ userId, bookId, tasks }: Props) => {
           <PlusCircleIcon size={14} className="shrink-0" />
         </Button>
       </form>
+      {errors.root && <Message variant="formerror">{errors.root.message}</Message>}
+
       {tasks.map((task) => (
         <TaskItem key={task.id} task={task} bookId={bookId} />
       ))}

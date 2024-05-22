@@ -6,7 +6,6 @@
 // import Label from "@/components/ui/label";
 // import { BadgePlusIcon, PlusIcon } from "lucide-react";
 // import { useState } from "react";
-// import { toast } from "sonner";
 
 // export default function BatchCreate({ userId }: { userId: string }) {
 //   const [noteTitles, setNoteTitles] = useState<string[]>([]);
@@ -47,9 +46,7 @@
 //     batchCreateNotes(title, description, hasTasks, noteTitles, userId).then((res) => {
 //       setOpen(false);
 //       if (res?.error) {
-//         return toast.error(res.error);
 //       } else {
-//         toast.success(res.success);
 //         setTitle("");
 //         setDescription("");
 //         setHasTasks(false);

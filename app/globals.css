@@ -5,6 +5,7 @@
 @layer base {
   :root {
     --mark-bg: rgba(226, 61, 113, 0.3);
+    --xs-percent: 0.85;
 
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -30,8 +31,6 @@
     --border: 0 0% 89.8%;
     --ring: 0 0% 9%;
     --radius: 0.5rem;
-
-    --xs-percent: 0.875;
   }
 
   .dark {
@@ -76,8 +75,27 @@
   }
 }
 
-.grainy {
-  background: url(https://grainy-gradients.vercel.app/noise.svg);
+@layer components {
+  .full-screen {
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
+  }
+
+  .title-bar {
+    @apply h-title flex items-center justify-between gap-2 border-b border-primary/10 px-4 py-2 md:px-6;
+  }
+
+  .h1 {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+
+  .grainy {
+    background: url(https://grainy-gradients.vercel.app/noise.svg);
+  }
 }
 
 .prose-xs {
@@ -300,4 +318,19 @@
 }
 .prose-xs :where(.prose-xs > :last-child):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
   margin-bottom: 0;
+}
+
+.wmde-markdown {
+  --color-fg-default: hsl(var(--foreground)) !important;
+  --color-fg-muted: hsl(var(--muted-foreground)) !important;
+  --color-fg-subtle: hsl(var(--foreground) / 90) !important;
+  --color-canvas-default: hsl(var(--background)) !important;
+  --color-canvas-subtle: hsl(var(--background) / 90) !important;
+  --color-border-default: hsl(var(--border)) !important;
+  --color-border-muted: hsl(var(--border) / 90) !important;
+  --color-neutral-muted: hsl(var(--muted)) !important;
+  --color-accent-fg: hsl(var(--accent-foreground)) !important;
+  --color-accent-emphasis: hsl(var(--accent)) !important;
+  --color-attention-subtle: hsl(var(--danger) / 60) !important;
+  --color-danger-fg: hsl(var(--danger)) !important;
 }

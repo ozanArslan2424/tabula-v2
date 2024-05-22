@@ -1,10 +1,12 @@
 import RequestInviteForm from "@/components/forms/req-invite";
+import { Header } from "@/components/layout/header";
 import Button from "@/components/ui/button";
 import Link from "next/link";
 
 export default function LandingPage() {
   return (
     <div className="flex min-h-[100dvh] flex-col">
+      <Header />
       <main className="flex-1">
         <section className="w-full border-b py-12 md:py-24 lg:py-32">
           <div className="space-y-10 px-4 md:px-6 xl:space-y-16">
