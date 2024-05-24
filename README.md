@@ -12,7 +12,7 @@ There are two ways you can try out this web app.
 5. Start creating books and taking notes.
 
 ### B. Demo account
-1. Go to the landing or login page
+1. Go to the [website](https://tabulanotes.vercel.app)
 2. Request an invite using the form
 3. You will receive an invitation link where you can create your demo account.
 4. Start creating books and taking notes.
