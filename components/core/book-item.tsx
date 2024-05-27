@@ -47,7 +47,7 @@ export default function BookItem({ book }: { book: BookInfoType }) {
   if (state === "editing") {
     return (
       <div className="flex h-full min-h-[180px] w-full flex-col justify-between rounded-md border border-primary/60 p-4 text-left shadow transition-all">
-        <BookSettingsForm book={bookInfo} closeDialog={() => setState("default")} />
+        <BookSettingsForm bookInfo={bookInfo} closeDialog={() => setState("default")} />
       </div>
     );
   }
