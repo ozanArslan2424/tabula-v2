@@ -1,10 +1,9 @@
-import { NoteType } from "@/lib/types";
 import { toSnakeCase } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
-  notes: NoteType[];
+  notes: { title: string; createdAt: Date }[];
 };
 
 export const NotesList = ({ notes }: Props) => {
@@ -16,7 +15,7 @@ export const NotesList = ({ notes }: Props) => {
         .map((note) => (
           <Link
             href={`#${toSnakeCase(note.title)}`}
-            key={note.id}
+            key={note.title}
             className="group relative flex w-full items-center justify-start gap-4 truncate rounded-sm px-2 py-1 text-sm capitalize hover:bg-secondary"
           >
             <ChevronRight className="transition-transform group-hover:translate-x-2" size={14} />

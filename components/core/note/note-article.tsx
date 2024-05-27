@@ -1,6 +1,5 @@
 "use client";
 import { cn, markdownToText } from "@/lib/utils";
-import TextareaAutosize from "react-textarea-autosize";
 // import { remarkMark } from "remark-mark-highlight";
 // import MarkdownPreview from "@uiw/react-markdown-preview";
 import React from "react";
@@ -30,10 +29,10 @@ export const NoteArticle = ({ markdown, focused, setMarkdown, handleSave }: Note
   }
 
   return (
-    <article className="bg-background">
+    <article className="h-[calc(100dvh-120px)] overflow-y-scroll bg-background md:h-main md:max-h-main">
       {focused ? (
-        <TextareaAutosize
-          className="h-main min-h-main max-h-main min-w-note w-full resize-none appearance-none overflow-y-scroll hyphens-auto text-wrap break-words border-none bg-transparent px-6 pb-16 pt-2 text-sm leading-relaxed outline-none"
+        <textarea
+          className="h-full min-h-full w-full min-w-note appearance-none border-none bg-background px-4 py-2 text-sm outline-none"
           value={markdown}
           onChange={(e) => setMarkdown(e.target.value)}
           autoFocus={focused}
@@ -43,7 +42,7 @@ export const NoteArticle = ({ markdown, focused, setMarkdown, handleSave }: Note
       ) : (
         <ReactMarkdown
           className={cn(
-            "h-main min-h-main max-h-main min-w-screen max-w-screen md:min-w-note md:max-w-note w-full overflow-y-scroll bg-transparent px-6 pb-16 pt-2",
+            "h-full min-h-full w-full bg-background px-4 py-2",
             "prose-xs prose dark:prose-invert sm:prose-sm prose-p:hyphens-auto prose-p:text-wrap prose-p:break-words prose-em:text-yellow-600 prose-table:m-0 prose-table:text-xs prose-hr:my-4 prose-hr:border-primary/70 dark:prose-em:text-yellow-500",
           )}
           remarkPlugins={[remarkGfm]}

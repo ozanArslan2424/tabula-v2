@@ -47,7 +47,7 @@ export const NoteHeader = ({ note, focused, setFocused, handleSave, markdown }: 
   };
 
   return (
-    <div className="title-bar">
+    <div className="title-bar w-full">
       {state === "editing" && (
         <form className="flex w-full items-center justify-between" onSubmit={handleTitleChange}>
           <Input

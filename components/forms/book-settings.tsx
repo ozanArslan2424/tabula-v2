@@ -7,7 +7,6 @@ import { LoadingIcon } from "@/components/ui/loading";
 import Message from "@/components/ui/message";
 import { Textarea } from "@/components/ui/textarea";
 import { updateBookSettings } from "@/lib/actions/update";
-import { BookInfoType, BookType } from "@/lib/types";
 import { BookSettingsSchema } from "@/lib/types/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,11 +14,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 type Props = {
-  book: BookInfoType | BookType;
+  bookInfo: {
+    id: string;
+    title: string;
+    description: string | null;
+    hasTasks: boolean;
+  };
   closeDialog: () => void;
 };
 
-export default function BookSettingsForm({ book, closeDialog }: Props) {
+export default function BookSettingsForm({ bookInfo, closeDialog }: Props) {
   const {
     register,
     handleSubmit,
@@ -29,10 +33,10 @@ export default function BookSettingsForm({ book, closeDialog }: Props) {
   } = useForm<z.infer<typeof BookSettingsSchema>>({
     resolver: zodResolver(BookSettingsSchema),
     defaultValues: {
-      bookId: book.id,
-      title: book.title,
-      description: book.description || "",
-      hasTasks: book.hasTasks,
+      bookId: bookInfo.id,
+      title: bookInfo.title,
+      description: bookInfo.description || "",
+      hasTasks: bookInfo.hasTasks,
     },
   });
 

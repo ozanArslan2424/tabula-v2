@@ -76,3 +76,26 @@ export const getUserByEmail = async (email: string) => {
 
   return user;
 };
+
+export const getCurrentBook = async (bookId: string) => {
+  const book = await db.query.bookTable.findFirst({
+    where: (table) => eq(table.id, bookId),
+    columns: {
+      id: true,
+      title: true,
+      description: true,
+      hasTasks: true,
+    },
+    with: {
+      notes: {
+        columns: {
+          title: true,
+          createdAt: true,
+        },
+      },
+      tasks: true,
+    },
+  });
+
+  return book;
+};
