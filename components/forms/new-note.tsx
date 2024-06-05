@@ -47,7 +47,7 @@ export default function NewNoteForm({ bookId }: { bookId: string }) {
   return (
     <div
       className={cn(
-        "w-screen min-w-full snap-start border border-primary/10 md:w-96 md:min-w-96",
+        "h-dvh w-screen min-w-full snap-start border border-primary/10 md:w-96 md:min-w-96",
         open ? "bg-muted/20" : "hover:bg-muted/20",
       )}
     >

@@ -32,7 +32,7 @@ export const NoteArticle = ({ markdown, focused, setMarkdown, handleSave }: Note
     <article className="h-[calc(100dvh-120px)] overflow-y-scroll bg-background md:h-main md:max-h-main">
       {focused ? (
         <textarea
-          className="h-full min-h-full w-full min-w-note appearance-none border-none bg-background px-4 py-2 text-sm outline-none"
+          className="h-[calc(100%-2px)] w-full resize-none border-none bg-background p-4 text-sm text-foreground outline-none"
           value={markdown}
           onChange={(e) => setMarkdown(e.target.value)}
           autoFocus={focused}
