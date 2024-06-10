@@ -12,48 +12,78 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export default function RegisterForm({ email }: { email: string }) {
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<z.infer<typeof RegisterSchema>>({
-    resolver: zodResolver(RegisterSchema),
-    defaultValues: {
-      email: email,
-    },
-  });
-
-  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-    registerAction(values).then((data) => {
-      if (data.error) setError("root", { message: data.error });
+    const {
+        register,
+        handleSubmit,
+        setError,
+        formState: { errors, isSubmitting },
+    } = useForm<z.infer<typeof RegisterSchema>>({
+        resolver: zodResolver(RegisterSchema),
+        defaultValues: {
+            email: email,
+        },
     });
-  };
 
-  return (
-    <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
-      {errors.root && <Message variant="error">{errors.root.message}</Message>}
-      <Label>
-        <span>Username</span>
-        <Input {...register("username")} type="text" placeholder="rasa" disabled={isSubmitting} required />
-        {errors.username && <Message variant="formerror">{errors.username.message}</Message>}
-      </Label>
+    const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+        registerAction(values).then((data) => {
+            if (data.error) setError("root", { message: data.error });
+        });
+    };
 
-      <Label>
-        <span>Email</span>
-        <Input {...register("email")} type="email" placeholder="@mail.com" disabled />
-        {errors.email && <Message variant="formerror">{errors.email.message}</Message>}
-      </Label>
+    return (
+        <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            {errors.root && (
+                <Message variant="error">{errors.root.message}</Message>
+            )}
+            <Label>
+                <span>Username</span>
+                <Input
+                    {...register("username")}
+                    type="text"
+                    placeholder="rasa"
+                    disabled={isSubmitting}
+                    required
+                />
+                {errors.username && (
+                    <Message variant="formerror">
+                        {errors.username.message}
+                    </Message>
+                )}
+            </Label>
 
-      <Label>
-        <span>Password</span>
-        <PasswordInput {...register("password")} placeholder="********" disabled={isSubmitting} required />
-        {errors.password && <Message variant="formerror">{errors.password.message}</Message>}
-      </Label>
+            <Label>
+                <span>Email</span>
+                <Input
+                    {...register("email")}
+                    type="email"
+                    placeholder="@mail.com"
+                    disabled
+                />
+                {errors.email && (
+                    <Message variant="formerror">
+                        {errors.email.message}
+                    </Message>
+                )}
+            </Label>
 
-      <Button disabled={isSubmitting} type="submit" className="w-full">
-        {isSubmitting ? <LoadingIcon2 /> : "Register"}
-      </Button>
-    </form>
-  );
+            <Label>
+                <span>Password</span>
+                <PasswordInput
+                    {...register("password")}
+                    placeholder="********"
+                    disabled={isSubmitting}
+                    required
+                />
+                {errors.password && (
+                    <Message variant="formerror">
+                        {errors.password.message}
+                    </Message>
+                )}
+            </Label>
+
+            <Button disabled={isSubmitting} type="submit" className="w-full">
+                {isSubmitting ? <LoadingIcon2 /> : "Register"}
+            </Button>
+        </form>
+    );
 }

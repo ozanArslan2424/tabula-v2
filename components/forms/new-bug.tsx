@@ -12,53 +12,74 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export default function BugForm({ email, closeDialog }: { email: string; closeDialog: () => void }) {
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<z.infer<typeof BugSchema>>({
-    resolver: zodResolver(BugSchema),
-    defaultValues: {
-      email: email,
-    },
-  });
-
-  const onSubmit = (values: z.infer<typeof BugSchema>) => {
-    registerBug(values);
-    sendEmail({
-      type: "bug",
-      email: values.email,
-      subject: values.subject,
-      description: values.description,
+export default function BugForm({
+    email,
+    closeDialog,
+}: {
+    email: string;
+    closeDialog: () => void;
+}) {
+    const {
+        register,
+        handleSubmit,
+        setError,
+        formState: { errors, isSubmitting },
+    } = useForm<z.infer<typeof BugSchema>>({
+        resolver: zodResolver(BugSchema),
+        defaultValues: {
+            email: email,
+        },
     });
-    closeDialog();
-  };
 
-  return (
-    <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
-      {errors.root && <Message variant="error">{errors.root.message}</Message>}
-      <Label>
-        <span>Subject</span>
-        <Input {...register("subject")} type="text" disabled={isSubmitting} required />
-        {errors.subject && <Message variant="formerror">{errors.subject.message}</Message>}
-      </Label>
+    const onSubmit = (values: z.infer<typeof BugSchema>) => {
+        registerBug(values);
+        sendEmail({
+            type: "bug",
+            email: values.email,
+            subject: values.subject,
+            description: values.description,
+        });
+        closeDialog();
+    };
 
-      <Label>
-        <span>Description</span>
-        <Textarea
-          {...register("description")}
-          disabled={isSubmitting}
-          required
-          placeholder="Hatanın detaylı açıklamasını yazın"
-        />
-        {errors.subject && <Message variant="formerror">{errors.subject.message}</Message>}
-      </Label>
+    return (
+        <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            {errors.root && (
+                <Message variant="error">{errors.root.message}</Message>
+            )}
+            <Label>
+                <span>Subject</span>
+                <Input
+                    {...register("subject")}
+                    type="text"
+                    disabled={isSubmitting}
+                    required
+                />
+                {errors.subject && (
+                    <Message variant="formerror">
+                        {errors.subject.message}
+                    </Message>
+                )}
+            </Label>
 
-      <Button disabled={isSubmitting} type="submit" className="w-full">
-        {isSubmitting ? <LoadingIcon2 /> : "Submit"}
-      </Button>
-    </form>
-  );
+            <Label>
+                <span>Description</span>
+                <Textarea
+                    {...register("description")}
+                    disabled={isSubmitting}
+                    required
+                    placeholder="Hatanın detaylı açıklamasını yazın"
+                />
+                {errors.subject && (
+                    <Message variant="formerror">
+                        {errors.subject.message}
+                    </Message>
+                )}
+            </Label>
+
+            <Button disabled={isSubmitting} type="submit" className="w-full">
+                {isSubmitting ? <LoadingIcon2 /> : "Submit"}
+            </Button>
+        </form>
+    );
 }

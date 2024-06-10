@@ -1,40 +1,32 @@
 "use client";
 import Button from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useMediaQuery } from "@/lib/hooks/use-media";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
-  children: React.ReactNode;
+    children: React.ReactNode;
 };
 
 export default function MobileHeader({ children }: Props) {
-  const isMobileScreen = useMediaQuery("(max-width: 768px)");
-
-  if (isMobileScreen)
     return (
-      <header className="title-bar bg-secondary/50">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon_sm">
-              <HamburgerMenuIcon />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="max-h-screen w-max p-0">
-            <div className="title-bar bg-secondary/50">
-              <Link href="/dash" className="text-xl font-bold">
-                Tabula
-              </Link>
-            </div>
-            {children}
-          </SheetContent>
-        </Sheet>
-        <Link href="/dash" className="text-lg font-bold">
-          Tabula Notes
-        </Link>
-      </header>
+        <header className="flex h-[60px] w-full items-center justify-between border-b px-4 md:hidden">
+            <Sheet>
+                <SheetTrigger asChild>
+                    <Button size="icon_sm" variant="outline">
+                        <MenuIcon size={14} />
+                        <span className="sr-only">Menu</span>
+                    </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[80vw] max-w-[80vw] p-0">
+                    {children}
+                </SheetContent>
+            </Sheet>
+            <Link href="/dash" className="text-lg font-bold">
+                <h1 className="text-xl font-semibold capitalize">
+                    Tabula Notes
+                </h1>
+            </Link>
+        </header>
     );
-
-  return <aside className="h-dvh min-h-dvh w-menu border-r border-primary/10">{children}</aside>;
 }

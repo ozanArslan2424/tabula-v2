@@ -7,23 +7,24 @@ import "./globals.css";
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Tabula Notlar",
-  description: "Tabula Notlar, daha organik bir deneyim sunma amacıyla oluşturulmuş bir not alma uygulamasıdır.",
+    title: "Tabula Notlar",
+    description:
+        "Tabula Notlar, daha organik bir deneyim sunma amacıyla oluşturulmuş bir not alma uygulamasıdır.",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html suppressHydrationWarning lang="en">
-      <body className={montserrat.className}>
-        <ThemeProvider attribute="class">
-          <div className="full-screen">{children}</div>
-          <Analytics />
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+    return (
+        <html suppressHydrationWarning lang="en">
+            <body className={montserrat.className}>
+                <ThemeProvider attribute="class">
+                    <div className="full-screen">{children}</div>
+                    <Analytics />
+                </ThemeProvider>
+            </body>
+        </html>
+    );
 }

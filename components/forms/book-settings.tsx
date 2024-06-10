@@ -14,72 +14,90 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 type Props = {
-  bookInfo: {
-    id: string;
-    title: string;
-    description: string | null;
-    hasTasks: boolean;
-  };
-  closeDialog: () => void;
+    bookId: string;
+    bookTitle: string;
+    bookDescription: string | null;
+    bookHasTasks: boolean;
+    closeDialog: () => void;
 };
 
-export default function BookSettingsForm({ bookInfo, closeDialog }: Props) {
-  const {
-    register,
-    handleSubmit,
-    setError,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<z.infer<typeof BookSettingsSchema>>({
-    resolver: zodResolver(BookSettingsSchema),
-    defaultValues: {
-      bookId: bookInfo.id,
-      title: bookInfo.title,
-      description: bookInfo.description || "",
-      hasTasks: bookInfo.hasTasks,
-    },
-  });
-
-  const onSubmit = (values: z.infer<typeof BookSettingsSchema>) => {
-    updateBookSettings(values).then((data) => {
-      if (data?.error) {
-        setError("root", { message: data.error });
-      }
-      if (data?.success) {
-        closeDialog();
-      }
+export default function BookSettingsForm({
+    bookId,
+    bookTitle,
+    bookDescription,
+    bookHasTasks,
+    closeDialog,
+}: Props) {
+    const {
+        register,
+        handleSubmit,
+        setError,
+        reset,
+        formState: { errors, isSubmitting },
+    } = useForm<z.infer<typeof BookSettingsSchema>>({
+        resolver: zodResolver(BookSettingsSchema),
+        defaultValues: {
+            bookId: bookId,
+            title: bookTitle,
+            description: bookDescription || "",
+            hasTasks: bookHasTasks,
+        },
     });
-  };
-  if (isSubmitting) return <LoadingIcon size={24} />;
 
-  return (
-    <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
-      {errors.root && <Message variant="error">{errors.root.message}</Message>}
+    const onSubmit = (values: z.infer<typeof BookSettingsSchema>) => {
+        updateBookSettings(values).then((data) => {
+            if (data?.error) {
+                setError("root", { message: data.error });
+            }
+            if (data?.success) {
+                closeDialog();
+            }
+        });
+    };
+    if (isSubmitting) return <LoadingIcon size={24} />;
 
-      <Label>
-        <span>Book title</span>
-        <Input {...register("title")} type="text" placeholder="Title" required />
-        {errors.title && <Message variant="formerror">{errors.title.message}</Message>}
-      </Label>
+    return (
+        <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            {errors.root && (
+                <Message variant="error">{errors.root.message}</Message>
+            )}
 
-      <Label>
-        <span>Book description</span>
-        <Textarea {...register("description")} placeholder="Short description" />
-      </Label>
+            <Label>
+                <span>Book title</span>
+                <Input
+                    {...register("title")}
+                    type="text"
+                    placeholder="Title"
+                    required
+                />
+                {errors.title && (
+                    <Message variant="formerror">
+                        {errors.title.message}
+                    </Message>
+                )}
+            </Label>
 
-      <div className="flex items-center gap-2">
-        <Checkbox {...register("hasTasks")}>
-          <span>Task list</span>
-        </Checkbox>
+            <Label>
+                <span>Book description</span>
+                <Textarea
+                    {...register("description")}
+                    placeholder="Short description"
+                />
+            </Label>
 
-        <Button size="sm" variant="secondary" onClick={closeDialog}>
-          Cancel
-        </Button>
+            <div className="flex items-center gap-2">
+                <Checkbox {...register("hasTasks")}>
+                    <span>Task list</span>
+                </Checkbox>
 
-        <Button type="submit" size="sm">
-          Save
-        </Button>
-      </div>
-    </form>
-  );
+                <Button size="sm" variant="secondary" onClick={closeDialog}>
+                    Cancel
+                </Button>
+
+                <Button type="submit" size="sm">
+                    Save
+                </Button>
+            </div>
+        </form>
+    );
 }

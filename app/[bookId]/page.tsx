@@ -1,33 +1,32 @@
-import { NoteItem } from "@/components/core/note/note-item";
 import NewNoteForm from "@/components/forms/new-note";
+import NotePaper from "@/components/parts/note-paper";
 import { getBookContent } from "@/lib/actions/read";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function BookPage({
-  params: { bookId },
+    params: { bookId },
 }: {
-  params: {
-    bookId: string;
-  };
+    params: {
+        bookId: string;
+    };
 }) {
-  const { user } = await getSession();
-  if (!user) {
-    redirect("/login");
-  }
+    const { user } = await getSession();
 
-  const currentBook = await getBookContent(bookId);
+    if (!user) redirect("/login");
 
-  if (!currentBook || currentBook.userId !== user.id) redirect("/dash");
+    const currentBook = await getBookContent(bookId);
 
-  return (
-    <div className="flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll">
-      {currentBook.notes
-        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-        .map((note) => {
-          return <NoteItem key={note.id} note={note} />;
-        })}
-      <NewNoteForm bookId={currentBook.id} />
-    </div>
-  );
+    if (!currentBook || currentBook.userId !== user.id) redirect("/dash");
+
+    return (
+        <main className="flex h-[calc(100dvh-60px)] max-h-[calc(100dvh-60px)] max-w-[100vw] snap-x snap-mandatory overflow-y-hidden overflow-x-scroll md:h-[100dvh] md:max-h-[100dvh] md:max-w-[80vw]">
+            {currentBook.notes
+                .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+                .map((note) => (
+                    <NotePaper note={note} key={note.id} />
+                ))}
+            <NewNoteForm bookId={currentBook.id} />
+        </main>
+    );
 }
