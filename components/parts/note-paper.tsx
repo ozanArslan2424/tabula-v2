@@ -1,4 +1,5 @@
 "use client";
+import { updateNote } from "@/lib/actions/update";
 import { markdownToText, toSnakeCase } from "@/lib/utils";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -35,7 +36,7 @@ export default function NotePaper({ note }: Props) {
 
     function handleSave() {
         setFocused(false);
-        // updateNote(note.id, markdown);
+        updateNote(note.id, markdown);
     }
 
     return (
