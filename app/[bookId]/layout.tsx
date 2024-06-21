@@ -1,25 +1,29 @@
 import MobileHeader from "@/components/layout/mobile-header";
-import BookSideMenu from "@/components/parts/book-side-menu";
-import { getBookList, getCurrentBook } from "@/lib/actions/read";
+
+import BookSideMenu from "./_c/book-side-menu";
+
+import { getBookContent, getBookList } from "@/lib/actions/read";
 import { getSession } from "@/lib/auth";
+
 import { redirect } from "next/navigation";
+import { BookProvider } from "../../context/book-provider";
 
 export default async function RootLayout({
     params: { bookId },
     children,
-}: Readonly<{
+}: {
     params: {
         bookId: string;
     };
     children: React.ReactNode;
-}>) {
+}) {
     const { user } = await getSession();
 
     if (!user) redirect("/login");
 
-    const currentBook = await getCurrentBook(bookId);
+    const currentBook = await getBookContent(bookId);
 
-    if (!currentBook) return <p>Book Not Found</p>;
+    if (!currentBook || currentBook.userId !== user.id) redirect("/dash");
 
     const bookList = await getBookList(user.id);
 
@@ -40,7 +44,8 @@ export default async function RootLayout({
                     bookList={bookList}
                 />
             </MobileHeader>
-            {children}
+
+            <BookProvider book={currentBook}>{children}</BookProvider>
         </div>
     );
 }

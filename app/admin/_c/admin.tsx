@@ -1,8 +1,10 @@
 "use client";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/inputs/input";
+import Select from "@/components/ui/inputs/select";
 import Label from "@/components/ui/label";
 import Message from "@/components/ui/message";
+
 import {
     createNewToken,
     createUser,
@@ -11,11 +13,11 @@ import {
 } from "@/lib/actions/admin.actions";
 import { UserTableType } from "@/lib/types";
 import { EmailSchema } from "@/lib/types/schemas";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import Select from "../ui/inputs/select";
 
 export function InviteForm() {
     const [success, setSuccess] = useState(false);

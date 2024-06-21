@@ -1,11 +1,12 @@
+import { LibraryLink } from "@/components/parts/link-btn";
 import {
     ChangeUserRole,
     DeleteUser,
     InviteForm,
     ReInviteForm,
-} from "@/components/forms/admin";
-import TestPage from "@/components/layout/test-page";
-import { LibraryLink } from "@/components/parts/link-btn";
+} from "./_c/admin";
+import TestPage from "./_c/test-page";
+
 import Button from "@/components/ui/button";
 import {
     Card,
@@ -26,6 +27,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import {
     deleteBug,
     getAllBugs,
@@ -34,6 +36,7 @@ import {
 } from "@/lib/actions/admin.actions";
 import { getSession } from "@/lib/auth";
 import { BugReportType, UserTableType } from "@/lib/types";
+
 import { Command, TestTube2Icon, User } from "lucide-react";
 import Image from "next/image";
 

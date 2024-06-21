@@ -2,8 +2,10 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/inputs/input";
 import Message from "@/components/ui/message";
+
 import { sendEmail } from "@/lib/actions/mail";
 import { EmailSchema } from "@/lib/types/schemas";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

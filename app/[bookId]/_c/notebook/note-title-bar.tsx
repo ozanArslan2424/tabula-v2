@@ -1,5 +1,10 @@
+import { SmallFormButtons } from "@/components/parts/form-buttons";
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/inputs/input";
+
 import { deleteNote } from "@/lib/actions/delete";
 import { updateNoteTitle } from "@/lib/actions/update";
+
 import {
     DownloadIcon,
     EditIcon,
@@ -8,9 +13,6 @@ import {
     XIcon,
 } from "lucide-react";
 import { useState, useTransition } from "react";
-import { SmallFormButtons } from "../forms/form-buttons";
-import Button from "../ui/button";
-import Input from "../ui/inputs/input";
 
 type Props = {
     focused: boolean;

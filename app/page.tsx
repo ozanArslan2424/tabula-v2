@@ -1,5 +1,5 @@
-import RequestInviteForm from "@/components/forms/req-invite";
 import { Header } from "@/components/layout/header";
+import RequestInviteForm from "@/components/parts/req-invite";
 import Button from "@/components/ui/button";
 import Link from "next/link";
 

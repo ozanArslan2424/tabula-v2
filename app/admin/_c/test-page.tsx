@@ -1,7 +1,8 @@
 "use client";
-
 import Input from "@/components/ui/inputs/input";
+
 import { toTitleCase } from "@/lib/utils";
+
 import { useState } from "react";
 
 export default function TestPage() {

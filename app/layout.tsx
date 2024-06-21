@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@/components/layout/theme-provider";
+import { ThemeProvider } from "@/context/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";

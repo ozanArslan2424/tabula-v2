@@ -1,13 +1,14 @@
-import LoginForm from "@/components/forms/login";
-import RequestInviteForm from "@/components/forms/req-invite";
+import RequestInviteForm from "@/components/parts/req-invite";
+
+import LoginForm from "../_c/login";
+
 import { getSession } from "@/lib/auth";
+
 import { redirect } from "next/navigation";
 
 export default async function Page() {
     const { user } = await getSession();
-    if (user) {
-        redirect("/dash");
-    }
+    if (user) redirect("/dash");
 
     return (
         <div className="min-w-80">

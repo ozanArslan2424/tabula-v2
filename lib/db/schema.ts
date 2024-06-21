@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const roleEnum = pgEnum("role", ["user", "admin"]);
+export const bookTypeEnum = pgEnum("type", ["notebook", "codebook", "pdf"]);
 
 export const userTable = pgTable("user", {
     id: text("id").primaryKey(),
@@ -36,6 +37,7 @@ export const sessionTable = pgTable("session", {
 
 export const bookTable = pgTable("book", {
     id: text("id").primaryKey(),
+    type: bookTypeEnum("type").notNull().default("notebook"),
     title: text("title").notNull(),
     description: text("description"),
     createdAt: timestamp("createdAt").notNull().defaultNow(),

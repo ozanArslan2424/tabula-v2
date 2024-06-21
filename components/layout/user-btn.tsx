@@ -15,7 +15,6 @@ export default function UserButton({ user }: { user: UserType }) {
             </Link>
         );
     }
-    // TODO: IMPLEMENT THIS BUTTON
 
     return (
         <Link href="/settings">

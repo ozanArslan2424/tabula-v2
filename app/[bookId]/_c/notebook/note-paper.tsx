@@ -1,11 +1,13 @@
 "use client";
+import NoteTitleBar from "./note-title-bar";
+
 import { updateNote } from "@/lib/actions/update";
 import { markdownToText, toSnakeCase } from "@/lib/utils";
+
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
-import NoteTitleBar from "./note-title-bar";
 
 type Props = {
     note: {

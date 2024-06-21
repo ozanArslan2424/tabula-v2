@@ -11,29 +11,41 @@ import { toTitleCase } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
+import { BookInfoType } from "../types";
 
 export const createBook = async (values: z.infer<typeof BookSchema>) => {
     try {
         const validatedFields = BookSchema.safeParse(values);
         if (!validatedFields.success)
             return { error: "Please check your inputs." };
-        const { userId, title, description, hasTasks } = validatedFields.data;
+        const { userId, title, description, hasTasks, type } =
+            validatedFields.data;
 
         const generatedBookId = uuid();
 
         await db.insert(bookTable).values({
             id: generatedBookId,
+            type: type,
             userId: userId,
             title: toTitleCase(title),
             description: description,
             hasTasks: hasTasks,
         });
 
-        return { success: "Book created." };
+        const newBook: BookInfoType = {
+            id: generatedBookId,
+            type: type,
+            title: toTitleCase(title),
+            description: description,
+            createdAt: new Date(),
+            hasTasks: hasTasks,
+            tasks: [],
+            notes: [],
+        };
+
+        return { success: "Book created.", data: newBook };
     } catch (error) {
         return { error: "There was an error. Please try again" };
-    } finally {
-        revalidatePath("/dash", "page");
     }
 };
 
@@ -69,11 +81,16 @@ export const createQuicknote = async (content: string, userId: string) => {
             userId: userId,
             content: content,
         });
-        return { success: "Quicknote created." };
+
+        const newQNote = {
+            id: generatedQuicknoteId,
+            userId: userId,
+            content: content,
+        };
+
+        return { success: "Quicknote created.", data: newQNote };
     } catch (error) {
         return { error: "There was an error. Please try again" };
-    } finally {
-        revalidatePath("/dash", "page");
     }
 };
 
@@ -92,10 +109,16 @@ export const createTask = async (
             name: name,
         });
 
-        return { success: "Task created." };
+        const newTask = {
+            id: generatedTaskId,
+            name: name,
+            completed: false,
+            bookId: bookId,
+            userId: userId,
+        };
+
+        return { success: "Task created.", data: newTask };
     } catch (error) {
         return { error: "There was an error. Please try again" };
-    } finally {
-        revalidatePath(`/${bookId}`);
     }
 };

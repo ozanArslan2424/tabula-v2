@@ -1,44 +1,41 @@
 "use client";
+import Button from "@/components/ui/button";
+import Checkbox from "@/components/ui/inputs/checkbox";
+import Input from "@/components/ui/inputs/input";
+import { LoadingIcon } from "@/components/ui/loading";
+
 import { createTask } from "@/lib/actions/create";
 import { deleteTask } from "@/lib/actions/delete";
 import { updateTask } from "@/lib/actions/update";
+import { TaskType } from "@/lib/types";
+
 import { PlusCircleIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
-import Button from "../ui/button";
-import Checkbox from "../ui/inputs/checkbox";
-import Input from "../ui/inputs/input";
-import { LoadingIcon } from "../ui/loading";
 
 type ListProps = {
     userId: string;
     bookId: string;
-    tasks: {
-        id: string;
-        name: string;
-        completed: boolean;
-        bookId: string;
-        userId: string;
-    }[];
+    tasks: TaskType[];
 };
 
 type ItemProps = {
     bookId: string;
-    task: {
-        id: string;
-        name: string;
-        completed: boolean;
-        bookId: string;
-        userId: string;
-    };
+    task: TaskType;
+    setTaskArray: React.Dispatch<React.SetStateAction<TaskType[]>>;
 };
 
 export default function TaskList({ tasks, bookId, userId }: ListProps) {
     const [taskName, setTaskName] = useState<string>("");
+    const [taskArray, setTaskArray] = useState(tasks);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleAddTask = (e: React.FormEvent) => {
         e.preventDefault();
         if (taskName) {
-            createTask(taskName, bookId, userId);
+            createTask(taskName, bookId, userId).then((res) => {
+                if (res.success) {
+                    setTaskArray([...taskArray, res.data]);
+                }
+            });
             setTaskName("");
         }
     };
@@ -47,7 +44,7 @@ export default function TaskList({ tasks, bookId, userId }: ListProps) {
         <div className="space-y-2 px-4">
             <form
                 className="flex items-center justify-start gap-2"
-                onSubmit={handleSubmit}
+                onSubmit={handleAddTask}
             >
                 <Input
                     placeholder="Add task..."
@@ -68,15 +65,20 @@ export default function TaskList({ tasks, bookId, userId }: ListProps) {
                 </Button>
             </form>
             <div className="flex flex-col gap-1">
-                {tasks.map((task, i) => (
-                    <TaskItem key={i} task={task} bookId={bookId} />
+                {taskArray.map((task, i) => (
+                    <TaskItem
+                        key={i}
+                        task={task}
+                        bookId={bookId}
+                        setTaskArray={setTaskArray}
+                    />
                 ))}
             </div>
         </div>
     );
 }
 
-const TaskItem = ({ task, bookId }: ItemProps) => {
+const TaskItem = ({ task, bookId, setTaskArray }: ItemProps) => {
     const [completed, setCompleted] = useState<boolean>(task.completed);
     const [isPending, startTransition] = useTransition();
 
@@ -90,7 +92,13 @@ const TaskItem = ({ task, bookId }: ItemProps) => {
 
     const handleDeleteTask = (taskId: string) => {
         startTransition(() => {
-            deleteTask(taskId, bookId);
+            deleteTask(taskId, bookId).then((res) => {
+                if (res.success) {
+                    setTaskArray((prev) =>
+                        prev.filter((task) => task.id !== taskId),
+                    );
+                }
+            });
         });
     };
 

@@ -6,17 +6,18 @@ import Label from "@/components/ui/label";
 import { LoadingIcon } from "@/components/ui/loading";
 import Message from "@/components/ui/message";
 import { Textarea } from "@/components/ui/textarea";
+
 import { updateBookSettings } from "@/lib/actions/update";
 import { BookSettingsSchema } from "@/lib/types/schemas";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
 import { z } from "zod";
 
 type Props = {
     bookId: string;
     bookTitle: string;
-    bookDescription: string | null;
+    bookDescription: string | null | undefined;
     bookHasTasks: boolean;
     closeDialog: () => void;
 };

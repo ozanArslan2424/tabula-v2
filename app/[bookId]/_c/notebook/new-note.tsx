@@ -4,9 +4,11 @@ import Input from "@/components/ui/inputs/input";
 import Label from "@/components/ui/label";
 import { LoadingIcon } from "@/components/ui/loading";
 import Message from "@/components/ui/message";
+
 import { createNote } from "@/lib/actions/create";
 import { NoteSchema } from "@/lib/types/schemas";
 import { cn } from "@/lib/utils";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircleIcon } from "lucide-react";
 import { useState, useTransition } from "react";

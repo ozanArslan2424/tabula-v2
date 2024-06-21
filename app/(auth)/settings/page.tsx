@@ -1,8 +1,11 @@
-import { SettingsForm } from "@/components/forms/settings";
 import { AdminLink, LibraryLink } from "@/components/parts/link-btn";
 import Button from "@/components/ui/button";
+
+import { SettingsForm } from "../_c/settings";
+
 import { logout } from "@/lib/actions/auth.actions";
 import { getSession } from "@/lib/auth";
+
 import { redirect } from "next/navigation";
 
 export default async function Page() {

@@ -1,32 +1,43 @@
-import NewNoteForm from "@/components/forms/new-note";
-import NotePaper from "@/components/parts/note-paper";
-import { getBookContent } from "@/lib/actions/read";
-import { getSession } from "@/lib/auth";
-import { redirect } from "next/navigation";
+"use client";
+import NewNoteForm from "./_c/notebook/new-note";
+import NotePaper from "./_c/notebook/note-paper";
 
-export default async function BookPage({
-    params: { bookId },
-}: {
-    params: {
-        bookId: string;
-    };
-}) {
-    const { user } = await getSession();
+import { useBookContext } from "../../context/book-provider";
+import { CodeBlock } from "./_c/codebook/code-block";
+import NewCodeForm from "./_c/codebook/new-code";
 
-    if (!user) redirect("/login");
+export default function BookPage() {
+    const currentBook = useBookContext();
 
-    const currentBook = await getBookContent(bookId);
+    if (currentBook.type === "notebook") {
+        return (
+            <main className="flex h-[calc(100dvh-60px)] max-h-[calc(100dvh-60px)] max-w-[100vw] snap-x snap-mandatory overflow-y-hidden overflow-x-scroll md:h-[100dvh] md:max-h-[100dvh] md:max-w-[80vw]">
+                {currentBook.notes
+                    .sort(
+                        (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+                    )
+                    .map((note) => (
+                        <NotePaper note={note} key={note.id} />
+                    ))}
+                <NewNoteForm bookId={currentBook.id} />
+            </main>
+        );
+    }
 
-    if (!currentBook || currentBook.userId !== user.id) redirect("/dash");
-
-    return (
-        <main className="flex h-[calc(100dvh-60px)] max-h-[calc(100dvh-60px)] max-w-[100vw] snap-x snap-mandatory overflow-y-hidden overflow-x-scroll md:h-[100dvh] md:max-h-[100dvh] md:max-w-[80vw]">
-            {currentBook.notes
-                .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-                .map((note) => (
-                    <NotePaper note={note} key={note.id} />
-                ))}
-            <NewNoteForm bookId={currentBook.id} />
-        </main>
-    );
+    if (currentBook.type === "codebook") {
+        return (
+            <main className="h-[calc(100dvh-76px)] max-h-[calc(100dvh-76px)] max-w-[100vw] columns-3 overflow-x-hidden overflow-y-scroll p-4 md:h-[calc(100dvh-1rem)] md:max-h-[calc(100dvh-1rem)] md:max-w-[80vw]">
+                {currentBook.notes
+                    .sort(
+                        (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+                    )
+                    .map((note) => (
+                        // TODO: needs styling
+                        <CodeBlock note={note} key={note.id} />
+                    ))}
+                {/* TODO: Needs to be rewritten */}
+                <NewCodeForm bookId={currentBook.id} />
+            </main>
+        );
+    }
 }

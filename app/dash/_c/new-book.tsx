@@ -2,11 +2,15 @@
 import Button from "@/components/ui/button";
 import Checkbox from "@/components/ui/inputs/checkbox";
 import Input from "@/components/ui/inputs/input";
+import Select from "@/components/ui/inputs/select";
 import Label from "@/components/ui/label";
 import Message from "@/components/ui/message";
 import { Textarea } from "@/components/ui/textarea";
+
 import { createBook } from "@/lib/actions/create";
+import { BookInfoType } from "@/lib/types";
 import { BookSchema } from "@/lib/types/schemas";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
@@ -15,9 +19,10 @@ import { z } from "zod";
 
 type Props = {
     userId: string;
+    setBookArray: React.Dispatch<React.SetStateAction<BookInfoType[]>>;
 };
 
-export const NewBookForm = ({ userId }: Props) => {
+const NewBookForm = ({ userId, setBookArray }: Props) => {
     const [state, setState] = useState<"default" | "creating">("default");
 
     const {
@@ -31,15 +36,18 @@ export const NewBookForm = ({ userId }: Props) => {
         defaultValues: {
             userId: userId,
             hasTasks: false,
+            type: "notebook",
         },
     });
 
     function onSubmit(values: z.infer<typeof BookSchema>) {
-        createBook(values).then((data) => {
-            if (data.error) {
-                setError("root", { message: data.error });
-            } else {
+        createBook(values).then((res) => {
+            if (res.error) {
+                setError("root", { message: res.error });
+            }
+            if (res.success) {
                 setState("default");
+                setBookArray((prev) => [...prev, res.data]);
             }
         });
     }
@@ -85,6 +93,15 @@ export const NewBookForm = ({ userId }: Props) => {
                         />
                     </Label>
 
+                    <Label>
+                        <span>Type of book</span>
+                        <Select {...register("type")}>
+                            <option value="notebook">Notes</option>
+                            <option value="codebook">Code</option>
+                            <option value="pdf">PDF</option>
+                        </Select>
+                    </Label>
+
                     <div className="flex items-center gap-2">
                         <Checkbox {...register("hasTasks")}>
                             <span>Task list</span>
@@ -117,3 +134,5 @@ export const NewBookForm = ({ userId }: Props) => {
         );
     }
 };
+
+export default NewBookForm;

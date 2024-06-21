@@ -9,18 +9,26 @@ import {
 import { LoadingIcon } from "@/components/ui/loading";
 import { deleteBook } from "@/lib/actions/delete";
 import { BookInfoType } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import {
     CheckSquareIcon,
+    CodeIcon,
     MoreVerticalIcon,
     NotebookTextIcon,
     Settings2Icon,
+    TextSelectIcon,
     Trash2Icon,
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
-import BookSettingsForm from "../forms/book-settings";
+import BookSettingsForm from "../../../components/parts/book-settings";
 
-export default function BookItem({ book }: { book: BookInfoType }) {
+type ItemProps = {
+    book: BookInfoType;
+    setBookArray: React.Dispatch<React.SetStateAction<BookInfoType[]>>;
+};
+
+export default function BookItem({ book, setBookArray }: ItemProps) {
     const [isPending, startTransition] = useTransition();
     const [state, setState] = useState<"default" | "editing" | "deleting">(
         "default",
@@ -41,7 +49,13 @@ export default function BookItem({ book }: { book: BookInfoType }) {
 
     const handleDelete = () => {
         startTransition(() => {
-            deleteBook(book.id);
+            deleteBook(book.id).then((res) => {
+                if (res.success) {
+                    setBookArray((prev) =>
+                        prev.filter((item) => item.id !== book.id),
+                    );
+                }
+            });
         });
     };
 
@@ -93,7 +107,14 @@ export default function BookItem({ book }: { book: BookInfoType }) {
     }
 
     return (
-        <div className="relative h-full min-h-[180px] w-full text-left">
+        <div
+            className={cn(
+                book.type === "notebook" && "bg-amber-100/5",
+                book.type === "codebook" && "bg-emerald-100/5",
+                book.type === "pdf" && "bg-rose-100/5",
+                "relative h-full min-h-[180px] w-full overflow-clip rounded-md text-left",
+            )}
+        >
             <div className="absolute right-2 top-2 z-10">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -130,6 +151,14 @@ export default function BookItem({ book }: { book: BookInfoType }) {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+            </div>
+
+            <div className="pointer-events-none absolute -bottom-7 -right-7 rotate-12 *:stroke-primary/10">
+                {book.type === "notebook" && (
+                    <TextSelectIcon size={128} strokeWidth={0.8} />
+                )}
+                {book.type === "codebook" && <CodeIcon size={128} />}
+                {book.type === "pdf" && "bg-rose-100/5"}
             </div>
 
             <Link

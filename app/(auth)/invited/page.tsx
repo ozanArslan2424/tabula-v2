@@ -1,8 +1,11 @@
 "use client";
-import RegisterForm from "@/components/forms/register";
+import RegisterForm from "../_c/register";
+
 import { LandingPageLink } from "@/components/parts/link-btn";
 import Message from "@/components/ui/message";
+
 import { verifyInvite } from "@/lib/actions/auth.actions";
+
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 

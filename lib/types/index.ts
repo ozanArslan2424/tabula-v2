@@ -7,20 +7,22 @@ export type UserType = {
 } | null;
 
 export type BookType = {
-    title: string;
-    userId: string;
     id: string;
+    type: "notebook" | "codebook" | "pdf";
+    title: string;
     description: string | null;
     createdAt: Date;
     hasTasks: boolean;
     tasks: TaskType[];
     notes: NoteType[];
+    userId: string;
 };
 
 export type BookInfoType = {
     id: string;
+    type: "notebook" | "codebook" | "pdf";
     title: string;
-    description: string | null;
+    description: string | undefined | null;
     createdAt: Date;
     hasTasks: boolean;
     tasks: { name: string }[];

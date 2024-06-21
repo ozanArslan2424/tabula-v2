@@ -19,6 +19,7 @@ export const getAllBooks = async (userId: string) => {
         where: (table) => eq(table.userId, userId),
         columns: {
             id: true,
+            type: true,
             title: true,
             description: true,
             createdAt: true,
@@ -50,6 +51,7 @@ export const getBookContent = async (bookId: string) => {
         },
     });
 
+    if (!book) return null;
     return book;
 };
 

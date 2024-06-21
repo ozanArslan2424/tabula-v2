@@ -49,6 +49,7 @@ export const BugSchema = z.object({
 
 export const BookSchema = z.object({
     userId: z.string(),
+    type: z.enum(["notebook", "codebook", "pdf"]).default("notebook"),
     title: z
         .string()
         .min(2, { message: "Book title must be at least 2 characters." }),

@@ -1,6 +1,12 @@
 "use client";
+import BookSettingsForm from "@/components/parts/book-settings";
 import Button from "@/components/ui/button";
+import ThemeToggle from "@/components/ui/theme-toggle";
+
+import TaskList from "./task-list";
+
 import { toSnakeCase } from "@/lib/utils";
+
 import {
     BookTextIcon,
     ChevronRight,
@@ -10,9 +16,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import BookSettingsForm from "../forms/book-settings";
-import ThemeToggle from "../ui/theme-toggle";
-import TaskList from "./task-list";
 
 type Props = {
     userId: string;

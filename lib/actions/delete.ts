@@ -52,7 +52,5 @@ export const deleteQuicknote = async (qNoteId: string) => {
         return { success: "Quicknote deleted." };
     } catch (error) {
         return { error: "There was an error. Please try again" };
-    } finally {
-        revalidatePath("/dash", "page");
     }
 };

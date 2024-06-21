@@ -1,8 +1,10 @@
 import Button from "@/components/ui/button";
+import ThemeToggle from "@/components/ui/theme-toggle";
+
+import { QuicknoteList } from "./q-note-list";
+
 import { UserCogIcon } from "lucide-react";
 import Link from "next/link";
-import ThemeToggle from "../ui/theme-toggle";
-import { QuicknoteList } from "./q-note-list";
 
 type Props = {
     userId: string;
