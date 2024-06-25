@@ -2,6 +2,7 @@
 import NoteTitleBar from "./note-title-bar";
 
 import { updateNote } from "@/lib/actions/update";
+import { NoteType } from "@/lib/types";
 import { markdownToText, toSnakeCase } from "@/lib/utils";
 
 import { useState } from "react";
@@ -10,16 +11,11 @@ import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
 
 type Props = {
-    note: {
-        id: string;
-        title: string;
-        content: string | null;
-        bookId: string;
-        createdAt: Date;
-    };
+    note: NoteType;
+    setNoteArray: React.Dispatch<React.SetStateAction<NoteType[]>>;
 };
 
-export default function NotePaper({ note }: Props) {
+export default function NotePaper({ note, setNoteArray }: Props) {
     const [focused, setFocused] = useState(false);
     const [markdown, setMarkdown] = useState(note.content || "");
 
@@ -52,6 +48,7 @@ export default function NotePaper({ note }: Props) {
                 markdown={markdown}
                 setFocused={setFocused}
                 handleSave={handleSave}
+                setNoteArray={setNoteArray}
             />
             <article className="max-h-[calc(100dvh-140px)] max-w-[100vw] md:max-h-[calc(100dvh-80px)] md:max-w-[40vw]">
                 {focused ? (

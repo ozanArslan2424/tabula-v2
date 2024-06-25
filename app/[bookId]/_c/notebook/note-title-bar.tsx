@@ -26,6 +26,7 @@ type Props = {
     markdown: string;
     setFocused: React.Dispatch<React.SetStateAction<boolean>>;
     handleSave: () => void;
+    setNoteArray: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 export default function NoteTitleBar({
@@ -34,6 +35,7 @@ export default function NoteTitleBar({
     markdown,
     setFocused,
     handleSave,
+    setNoteArray,
 }: Props) {
     const [titleBarState, setTitleBarState] = useState<
         "default" | "editing" | "downloading" | "deleting"
@@ -61,7 +63,14 @@ export default function NoteTitleBar({
     function handleDelete(e: React.FormEvent) {
         e.preventDefault();
         startTransition(() => {
-            deleteNote(note.id, note.bookId);
+            deleteNote(note.id, note.bookId).then((res) => {
+                if (res.success) {
+                    setNoteArray((prev) =>
+                        prev.filter((n) => n.id !== note.id),
+                    );
+                    setTitleBarState("default");
+                }
+            });
         });
     }
 

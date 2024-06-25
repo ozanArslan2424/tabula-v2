@@ -6,12 +6,11 @@ import {
     quicknoteTable,
     taskTable,
 } from "@/lib/db/schema";
-import { BookSchema, NoteSchema } from "@/lib/types/schemas";
+import { BookSchema, SnippetSchema } from "@/lib/types/schemas";
 import { toTitleCase } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
-import { BookInfoType } from "../types";
+import { BookInfoType, NoteType } from "../types";
 
 export const createBook = async (values: z.infer<typeof BookSchema>) => {
     try {
@@ -23,52 +22,77 @@ export const createBook = async (values: z.infer<typeof BookSchema>) => {
 
         const generatedBookId = uuid();
 
-        await db.insert(bookTable).values({
+        const newBook = {
             id: generatedBookId,
             type: type,
             userId: userId,
             title: toTitleCase(title),
             description: description,
             hasTasks: hasTasks,
-        });
+        };
 
-        const newBook: BookInfoType = {
-            id: generatedBookId,
-            type: type,
-            title: toTitleCase(title),
-            description: description,
+        await db.insert(bookTable).values(newBook);
+
+        const newBookPlaceholder: BookInfoType = {
+            ...newBook,
             createdAt: new Date(),
-            hasTasks: hasTasks,
             tasks: [],
             notes: [],
         };
 
-        return { success: "Book created.", data: newBook };
+        return {
+            success: "Book created.",
+            data: newBookPlaceholder,
+        };
     } catch (error) {
         return { error: "There was an error. Please try again" };
     }
 };
 
-export const createNote = async (values: z.infer<typeof NoteSchema>) => {
+export const createNote = async (bookId: string, title: string) => {
     try {
-        const validatedFields = NoteSchema.safeParse(values);
-        if (!validatedFields.success)
-            return { error: "Please check your inputs." };
-        const { bookId, title } = validatedFields.data;
-
         const generatedNoteId = uuid();
 
-        await db.insert(noteTable).values({
+        const newNote: NoteType = {
             id: generatedNoteId,
             bookId: bookId,
             title: toTitleCase(title),
-        });
+            content: "",
+            createdAt: new Date(),
+        };
 
-        return { success: "Note created." };
+        await db.insert(noteTable).values(newNote);
+
+        return { success: "Note created.", data: newNote };
     } catch (error) {
         return { error: "There was an error. Please try again" };
-    } finally {
-        revalidatePath(`/${values.bookId}`);
+    }
+};
+
+export const createSnippet = async (values: z.infer<typeof SnippetSchema>) => {
+    try {
+        const validatedFields = SnippetSchema.safeParse(values);
+        if (!validatedFields.success)
+            return { error: "Please check your inputs." };
+        const { bookId, title, content } = validatedFields.data;
+
+        const generatedNoteId = uuid();
+
+        const newSnippet = {
+            id: generatedNoteId,
+            bookId: bookId,
+            title: toTitleCase(title),
+            content: content,
+        };
+
+        await db.insert(noteTable).values(newSnippet);
+
+        return {
+            success: "Note created.",
+            data: { ...newSnippet, createdAt: new Date() },
+        };
+    } catch (error) {
+        return { error: "There was an error. Please try again" };
     }
 };
 

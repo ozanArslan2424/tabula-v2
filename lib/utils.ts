@@ -1,4 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
+import DOMPurify from "dompurify";
+import { marked } from "marked";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -28,3 +30,13 @@ export function toTitleCase(input: string): string {
 export function markdownToText(input: string): string {
     return input.replace(/(?:\r\n|\r|\n)/g, "  \n");
 }
+
+export const getCleanHTML = async (dirty: string) => {
+    const parsed = await marked.parse(dirty, {
+        gfm: true,
+    });
+
+    const clean = DOMPurify.sanitize(parsed, { USE_PROFILES: { html: true } });
+
+    return clean;
+};

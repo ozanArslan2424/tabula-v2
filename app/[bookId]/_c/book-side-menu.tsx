@@ -10,6 +10,7 @@ import { toSnakeCase } from "@/lib/utils";
 import {
     BookTextIcon,
     ChevronRight,
+    CodeIcon,
     HomeIcon,
     SettingsIcon,
     UserCogIcon,
@@ -39,6 +40,7 @@ type Props = {
     bookList: {
         id: string;
         title: string;
+        type: string;
     }[];
 };
 
@@ -144,10 +146,18 @@ export default function BookSideMenu({ userId, currentBook, bookList }: Props) {
                                             key={i}
                                             className="group flex w-full items-center justify-start gap-4 truncate rounded-sm px-2 py-1 text-sm capitalize hover:bg-secondary"
                                         >
-                                            <BookTextIcon
-                                                size={14}
-                                                className="transition-transform group-hover:translate-x-1 group-hover:rotate-3 group-hover:scale-125"
-                                            />
+                                            {book.type === "notebook" && (
+                                                <BookTextIcon
+                                                    size={14}
+                                                    className="transition-transform group-hover:translate-x-1 group-hover:rotate-3 group-hover:scale-125"
+                                                />
+                                            )}
+                                            {book.type === "codebook" && (
+                                                <CodeIcon
+                                                    size={14}
+                                                    className="transition-transform group-hover:translate-x-1 group-hover:rotate-3 group-hover:scale-125"
+                                                />
+                                            )}
                                             {book.title}
                                         </Link>
                                     ))}

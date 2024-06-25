@@ -73,6 +73,14 @@ export const NoteSchema = z.object({
         .min(2, { message: "Note title must be at least 2 characters." }),
 });
 
+export const SnippetSchema = z.object({
+    bookId: z.string(),
+    title: z
+        .string()
+        .min(2, { message: "Note title must be at least 2 characters." }),
+    content: z.string().min(1, { message: "Snippet cannot be empty." }),
+});
+
 export const NoteTitleSchema = z.object({
     noteId: z.string(),
     title: z

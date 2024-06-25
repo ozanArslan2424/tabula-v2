@@ -1,15 +1,29 @@
+"use client";
 import { NoteType } from "@/lib/types";
+import { useEffect, useState } from "react";
 
 type Props = {
     note: NoteType;
 };
 
-export const CodeBlock = ({ note }: Props) => {
+export default function CodeBlock({ note }: Props) {
+    const [html, setHtml] = useState("");
+
+    useEffect(() => {
+        if (!note.content) return;
+        // markdownToHtml(note.content).then((res) => {
+        //     setHtml(res);
+        // });
+    });
+
     return (
-        <div className="prose-xs prose rounded-md border shadow-sm dark:prose-invert md:prose-sm">
-            <pre>
-                <code>{note.content}</code>
-            </pre>
+        <div className="prose-sm max-h-[40vh] overflow-scroll">
+            <div
+                className="no-tailwind"
+                dangerouslySetInnerHTML={{
+                    __html: html,
+                }}
+            />
         </div>
     );
-};
+}

@@ -8,6 +8,7 @@ export const getBookList = async (userId: string) => {
         columns: {
             id: true,
             title: true,
+            type: true,
         },
     });
 

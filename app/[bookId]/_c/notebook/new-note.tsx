@@ -3,44 +3,34 @@ import Button from "@/components/ui/button";
 import Input from "@/components/ui/inputs/input";
 import Label from "@/components/ui/label";
 import { LoadingIcon } from "@/components/ui/loading";
-import Message from "@/components/ui/message";
-
 import { createNote } from "@/lib/actions/create";
-import { NoteSchema } from "@/lib/types/schemas";
+
+import { NoteType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircleIcon } from "lucide-react";
 import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
-export default function NewNoteForm({ bookId }: { bookId: string }) {
+type Props = {
+    bookId: string;
+    setNoteArray: React.Dispatch<React.SetStateAction<NoteType[]>>;
+};
+
+export default function NewNoteForm({ bookId, setNoteArray }: Props) {
     const [open, setOpen] = useState(false);
     const [isPending, startTransition] = useTransition();
+    const [title, setTitle] = useState("");
 
-    const {
-        register,
-        handleSubmit,
-        setError,
-        reset,
-        formState: { errors },
-    } = useForm<z.infer<typeof NoteSchema>>({
-        resolver: zodResolver(NoteSchema),
-        defaultValues: {
-            bookId: bookId,
-        },
-    });
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-    const onSubmit = (values: z.infer<typeof NoteSchema>) => {
+        if (!title || title === " " || title === "") return;
+
         startTransition(() => {
-            createNote(values).then((data) => {
-                if (data.error) {
-                    setError("root", { message: data.error });
-                }
-                if (data?.success) {
+            createNote(bookId, title).then((res) => {
+                if (res?.success) {
                     setOpen(false);
-                    reset();
+                    setNoteArray((prev) => [...prev, res.data]);
                 }
             });
         });
@@ -64,17 +54,16 @@ export default function NewNoteForm({ bookId }: { bookId: string }) {
                 </Button>
             ) : (
                 <form
-                    onSubmit={handleSubmit(onSubmit)}
+                    onSubmit={handleSubmit}
                     className="flex h-full flex-col items-center justify-center gap-2 px-12"
                 >
-                    {errors.root && (
-                        <Message variant="error">{errors.root.message}</Message>
-                    )}
-
                     <Label>
                         <span>Note title</span>
                         <Input
-                            {...register("title")}
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            name="title"
+                            id="title"
                             className="w-full max-w-full"
                             type="text"
                             placeholder="..."
@@ -82,11 +71,6 @@ export default function NewNoteForm({ bookId }: { bookId: string }) {
                             autoFocus={open}
                             required
                         />
-                        {errors.title && (
-                            <Message variant="formerror">
-                                {errors.title.message}
-                            </Message>
-                        )}
                     </Label>
 
                     <Button

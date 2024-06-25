@@ -418,3 +418,9 @@
     --color-attention-subtle: hsl(var(--danger) / 60) !important;
     --color-danger-fg: hsl(var(--danger)) !important;
 }
+
+@layer utilities {
+    .no-tailwind {
+        all: unset;
+    }
+}

@@ -1,116 +1,97 @@
 "use client";
-import Button from "@/components/ui/button";
-import Input from "@/components/ui/inputs/input";
-import Label from "@/components/ui/label";
-import { LoadingIcon } from "@/components/ui/loading";
-import Message from "@/components/ui/message";
 
-import { createNote } from "@/lib/actions/create";
-import { NoteSchema } from "@/lib/types/schemas";
-import { cn } from "@/lib/utils";
+import { LoadingIcon2 } from "@/components/ui/loading";
+import { createSnippet } from "@/lib/actions/create";
+import { NoteType } from "@/lib/types";
+import { CirclePlusIcon } from "lucide-react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusCircleIcon } from "lucide-react";
 import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
-export default function NewCodeForm({ bookId }: { bookId: string }) {
+type Props = {
+    bookId: string;
+    setNoteArray: React.Dispatch<React.SetStateAction<NoteType[]>>;
+};
+
+export default function NewCodeForm({ bookId, setNoteArray }: Props) {
     const [open, setOpen] = useState(false);
     const [isPending, startTransition] = useTransition();
 
-    const {
-        register,
-        handleSubmit,
-        setError,
-        reset,
-        formState: { errors },
-    } = useForm<z.infer<typeof NoteSchema>>({
-        resolver: zodResolver(NoteSchema),
-        defaultValues: {
-            bookId: bookId,
-        },
-    });
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-    const onSubmit = (values: z.infer<typeof NoteSchema>) => {
+        const formData = new FormData(e.target as HTMLFormElement);
+        const title = formData.get("title") as string;
+        const content = formData.get("snippet") as string;
+
         startTransition(() => {
-            createNote(values).then((data) => {
-                if (data.error) {
-                    setError("root", { message: data.error });
-                }
-                if (data?.success) {
+            createSnippet({ bookId, title, content }).then((res) => {
+                if (res.success) {
+                    setNoteArray((prev) => [...prev, res.data]);
                     setOpen(false);
-                    reset();
                 }
             });
         });
     };
 
-    return (
-        <div
-            className={cn(
-                "h-[calc(100dvh-1rem)] w-[100vw] min-w-full snap-start border border-primary/10 md:w-[40vw] md:min-w-[40vw]",
-                open ? "bg-muted/20" : "hover:bg-muted/20",
-            )}
-        >
-            {!open && !isPending ? (
-                <Button
-                    className="h-full w-full"
-                    variant="unstyled"
-                    size="unsized"
-                    onClick={() => setOpen(true)}
-                >
-                    <PlusCircleIcon className="shrink-0" size={20} />
-                </Button>
-            ) : (
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="flex h-full flex-col items-center justify-center gap-2 px-12"
-                >
-                    {errors.root && (
-                        <Message variant="error">{errors.root.message}</Message>
-                    )}
+    if (!open) {
+        return (
+            <button
+                onClick={() => setOpen(true)}
+                className="flex h-[60px] w-full items-center justify-center gap-2 border-b bg-transparent p-4 text-muted-foreground transition-all hover:bg-secondary hover:text-secondary-foreground"
+            >
+                <CirclePlusIcon size={16} />
+                <span>New Snippet</span>
+            </button>
+        );
+    }
 
-                    <Label>
-                        <span>Note title</span>
-                        <Input
-                            {...register("title")}
-                            className="w-full max-w-full"
-                            type="text"
-                            placeholder="..."
-                            disabled={isPending}
-                            autoFocus={open}
-                            required
-                        />
-                        {errors.title && (
-                            <Message variant="formerror">
-                                {errors.title.message}
-                            </Message>
-                        )}
-                    </Label>
+    if (isPending) {
+        return (
+            <div className="flex h-[60px] w-full items-center justify-center gap-2 border-b bg-transparent p-4 text-foreground">
+                <LoadingIcon2 />
+                <p className="text-foreground">Creating snippet...</p>
+            </div>
+        );
+    }
 
-                    <Button
-                        disabled={isPending}
-                        type="submit"
-                        size="sm"
-                        className="mt-2 w-full"
-                    >
-                        {isPending ? <LoadingIcon size={20} /> : "Create"}
-                    </Button>
-
-                    <Button
-                        disabled={isPending}
+    if (open) {
+        return (
+            <form
+                onSubmit={handleSubmit}
+                onReset={() => setOpen(false)}
+                className="flex h-max flex-col border-b"
+            >
+                <div className="h-[59px]">
+                    <input
+                        name="title"
+                        id="title"
+                        type="text"
+                        placeholder="Give your snippet a title"
+                        className="h-full w-full p-4 text-sm outline-accent"
+                        autoFocus
+                    />
+                </div>
+                <textarea
+                    name="snippet"
+                    id="snippet"
+                    placeholder="Paste or write your code here"
+                    className="h-64 w-full resize-y border-y bg-transparent p-4 font-mono text-sm outline-accent"
+                />
+                <div className="flex justify-between ">
+                    <button
                         type="reset"
-                        size="sm"
-                        className="w-full"
-                        variant="secondary"
-                        onClick={() => setOpen(false)}
+                        className="w-full bg-transparent px-4 py-2 text-foreground transition-all hover:bg-secondary hover:text-secondary-foreground"
                     >
                         Cancel
-                    </Button>
-                </form>
-            )}
-            {!open && isPending && <LoadingIcon size={20} />}
-        </div>
-    );
+                    </button>
+                    <button
+                        type="submit"
+                        className="w-full bg-transparent px-4 py-2 text-foreground transition-all hover:bg-secondary hover:text-secondary-foreground"
+                    >
+                        Submit
+                    </button>
+                </div>
+            </form>
+        );
+    }
 }
